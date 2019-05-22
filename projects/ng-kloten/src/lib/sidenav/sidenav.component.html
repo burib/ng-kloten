@@ -1,0 +1,5 @@
+<nav id="nav" class="hxNav">
+  <a *ngFor="let link of menuItems"
+     [routerLink]="link.href"
+     routerLinkActive="current">{{ link.title }}</a>
+</nav>
