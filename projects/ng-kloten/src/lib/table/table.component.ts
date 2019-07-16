@@ -22,8 +22,8 @@ export class TableComponent implements OnInit {
   pageSize = 10;
   pageSizeOptions = [10, 25, 50, 100];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(private injector: Injector) {
     this.getInjector = (row, cell, cellKey) => {

@@ -6,12 +6,12 @@ import {AuthGuard} from 'ng-kloten';
 export const routes: Routes = [
   {
     path: 'todos',
-    loadChildren: './todos/todos.module#TodosModule',
+    loadChildren: () => import('./todos/todos.module').then(m => m.TodosModule),
     canActivate: [AuthGuard],
   },
   {
     path: 'home',
-    loadChildren: './home/home.module#HomeModule',
+    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
     canActivate: [AuthGuard],
   },
   {
