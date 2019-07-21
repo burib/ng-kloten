@@ -27,6 +27,8 @@
     "@angular/platform-browser": "~8.1.1",
     "@angular/platform-browser-dynamic": "~8.1.1",
     "@angular/router": "~8.1.1",
+    "@aws-amplify/api": "1.0.39",
+    "@aws-amplify/pubsub": "1.0.30",
     "core-js": "2.6.9",
     "rxjs": "~6.5.2",
     "tslib": "^1.9.0",
