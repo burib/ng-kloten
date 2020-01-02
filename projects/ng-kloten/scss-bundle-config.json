@@ -1,5 +1,8 @@
 {
   "entry": "./src/ng-kloten.scss",
   "dest": "dist/ng-kloten/ng-kloten.scss",
-  "project": "./projects/ng-kloten/"
+  "project": "./projects/ng-kloten/",
+  "includePaths": [
+    "."
+  ]
 }
