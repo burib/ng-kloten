@@ -13,8 +13,8 @@ export class TableComponent implements OnInit {
   filters = [];
   filterValues = {};
 
-  @Input() data: any[];
-  @Input() headers: any[];
+  @Input() data: any[] = [];
+  @Input() headers: any[] = [];
   dataSource: any;
   displayedColumns: string[];
   getInjector: any;
@@ -22,23 +22,25 @@ export class TableComponent implements OnInit {
   pageSize = 10;
   pageSizeOptions = [10, 25, 50, 100];
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(private injector: Injector) {
     this.getInjector = (row, cell, cellKey) => {
-     return Injector.create({providers: [
-       {provide: 'row', useValue: row},
-       {provide: 'cell', useValue: cell},
-       {provide: 'cellKey', useValue: cellKey},
-     ], parent: this.injector});
+      return Injector.create({
+        providers: [
+          {provide: 'row', useValue: row},
+          {provide: 'cell', useValue: cell},
+          {provide: 'cellKey', useValue: cellKey},
+        ], parent: this.injector
+      });
     };
   }
 
   createFilter(): (data: any, filterValue: string) => boolean {
-    let filterFunction = function(data, filterValue): boolean {
+    const filterFunction = function (data, filterValue): boolean {
       let searchTerms = filterValue;
-      let isMatching: boolean = true;
+      let isMatching = true;
 
       try {
         // TODO collect filtering functions and return matching items.
@@ -71,16 +73,19 @@ export class TableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.filterValues = this.headers.filter(header => header.isFilterable).map(header => header.id).reduce((o, key) => ({ ...o, [key]: ''}), {});
+    this.filterValues = this.headers.filter(header => header.isFilterable).map(header => header.id).reduce((o, key) => ({
+      ...o,
+      [key]: ''
+    }), {});
 
     Object.keys(this.filterValues).forEach((filterableColumnName) => {
-      let options = Array.from(new Set(this.data.map(row => row[filterableColumnName]))).map((value) => {
-        return { value: value, viewValue: value }
+      const options = Array.from(new Set(this.data.map(row => row[filterableColumnName]))).map((value) => {
+        return {value: value, viewValue: value};
       });
 
       options.unshift({value: '', viewValue: 'Show All'});
 
-      let filter = {
+      const filter = {
         formControl: new FormControl(''),
         label: this.headers.filter(header => header.id === filterableColumnName)[0].label,
         options: options,
@@ -105,8 +110,7 @@ export class TableComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-
-    //this.dataSource.filterPredicate = this.createFilter();
+    // this.dataSource.filterPredicate = this.createFilter();
   }
 
   applyFilter(filterValue: string) {

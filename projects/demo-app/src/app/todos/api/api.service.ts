@@ -9,7 +9,7 @@ export class ApiService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getItems(id = '') {
+  getItems(id: string = '') {
     const urlToGet = id.length > 0 ? `${this.apiBaseUrl}/todos/${id}` : `${this.apiBaseUrl}/todos`;
 
     return this

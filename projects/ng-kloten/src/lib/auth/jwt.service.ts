@@ -16,7 +16,7 @@ export class JwtService {
     } catch (e) {
       throw new Error(`Invalid token specified ${e.message}`);
     }
-  };
+  }
 
   isTokenExpired = (jwtToken = '') => {
     let isExpired = true;
@@ -26,12 +26,16 @@ export class JwtService {
       const currentTimeInUTC = Date.now().valueOf() / 1000;
 
       isExpired = (jwtObject.exp || 0) < currentTimeInUTC;
-      // console.log(jwtObject);
-      // console.log( isExpired ? `expired at ${new Date(jwtObject.exp).toISOString()}` : `valid until ${new Date(jwtObject.exp).toISOString()}` ); // TODO: only log in DebugMode
+      // // TODO: only log in DebugMode
+      // if (isExpired) {
+      //   console.log(`expired at ${new Date(jwtObject.exp).toISOString()}`);
+      // } else {
+      //   console.log(`valid until ${new Date(jwtObject.exp).toISOString()}`);
+      // }
     }
 
-    return isExpired
-  };
+    return isExpired;
+  }
 
   constructor() {
   }

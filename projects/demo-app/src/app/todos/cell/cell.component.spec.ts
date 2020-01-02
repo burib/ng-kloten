@@ -8,7 +8,12 @@ describe('CellComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CellComponent ]
+      declarations: [ CellComponent ],
+      providers: [
+        { provide: 'row', useValue: ''},
+        { provide: 'cell', useValue: ''},
+        { provide: 'cellKey', useValue: ''},
+      ]
     })
     .compileComponents();
   }));

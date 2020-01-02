@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'; // to read id from query params
-import { ApiService } from './../api/api.service'; // to call apiDataService
+import { ApiService } from '../api/api.service'; // to call apiDataService
 
 @Component({
   selector: 'demo-app-detail',

@@ -10,7 +10,7 @@ export class AuthHTTPInterceptor implements HttpInterceptor {
     const token = this.auth.getToken();
 
     if (token) {
-      console.info('raxNgLib: setting authorization header');
+      // setting authorization header
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
@@ -18,7 +18,7 @@ export class AuthHTTPInterceptor implements HttpInterceptor {
       });
     } else {
       // TODO, only enable in devMode
-      console.info("no token to be set for http interceptor.");
+      // no auth token found.
     }
 
     return next.handle(request);

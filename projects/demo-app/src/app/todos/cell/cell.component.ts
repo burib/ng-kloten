@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Injector } from '@angular/core';
+import {Component, OnInit, Input, Injector, Type, InjectionToken} from '@angular/core';
 
 
 @Component({
@@ -7,17 +7,17 @@ import { Component, OnInit, Input, Injector } from '@angular/core';
   styleUrls: ['./cell.component.scss']
 })
 export class CellComponent implements OnInit {
-  injectedRow:any;
-  injectedCell:any;
-  injectedCellKey:any;
+  injectedRow: any;
+  injectedCell: any;
+  injectedCellKey: any;
   @Input() row;
   @Input() cell;
   @Input() cellKey;
 
   constructor(injector: Injector) {
-    this.injectedRow = injector.get('row');
-    this.injectedCell = injector.get('cell');
-    this.injectedCellKey = injector.get('cellKey');
+    this.injectedRow = injector.get<any>(<any>'row');
+    this.injectedCell = injector.get<any>(<any>'cell');
+    this.injectedCellKey = injector.get<any>(<any>'cellKey');
   }
 
   ngOnInit() {

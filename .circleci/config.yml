@@ -1,37 +1,108 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-version: 2
-jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:latest-browsers
+version: 2.1
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
+on-master-branch: &on-master-branch
+  filters:
+    tags:
+      ignore: /.*/
+    branches:
+      only: master
 
-    working_directory: ~/repo
+container_node_with_browsers: &container_node_with_browsers
+  docker:
+    # images at https://circleci.com/docs/2.0/circleci-images/
+    - image: circleci/node:12-browsers
 
+commands:
+  checkout_repo:
+    description: "restores repository from cache if exists and not changed, otherwise checks out the latest."
     steps:
-      - checkout
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: npm install
-
+            - source-v1-{{ .Branch }}-{{ .Revision }}
+            - source-v1-{{ .Branch }}-
+            - source-v1-
+      - checkout
+      - save_cache:
+          key: source-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - ".git"
+  install_node_dependencies:
+    description: install node dependencies based on package-lock.json
+    steps:
+      - run: npm ci
+  restore_node_dependencies:
+    description: "restores node_modules from cache if exists and package-lock not changed, otherwise checks out the latest."
+    steps:
+      - restore_cache:
+          keys:
+            # when lock file changes, use increasingly general patterns to restore cache
+            - node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - node-v1-{{ .Branch }}-
+            - node-v1-
       - save_cache:
           paths:
+            - ~/usr/local/lib/node_modules  # location depends on npm version
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - ~/.npm
+          key: node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
 
-      # run tests!
-      - run: npm test
+jobs:
+  build:
+    <<: *container_node_with_browsers
+    working_directory: ~/repo
+    steps:
+      - checkout_repo
+      - restore_node_dependencies
+      - install_node_dependencies
+      - run:
+          name: build app
+          command: npm run build
+  lint:
+    <<: *container_node_with_browsers
+    working_directory: ~/repo
+    steps:
+      - checkout_repo
+      - restore_node_dependencies
+      - install_node_dependencies
+      - run:
+          name: lint
+          command: npm run lint --if-present
+
+  unit-tests:
+    <<: *container_node_with_browsers
+    working_directory: ~/repo
+    steps:
+      - checkout_repo
+      - restore_node_dependencies
+      - install_node_dependencies
+      - run:
+          name: running unit tests
+          command: npm run test --if-present
+
+  e2e-tests:
+    <<: *container_node_with_browsers
+    working_directory: ~/repo
+    steps:
+      - checkout_repo
+      - restore_node_dependencies
+      - install_node_dependencies
+      - run:
+          name: echo current chrome version
+          command: google-chrome --version
+      - run:
+          name: running e2e tests
+          command: npm run e2e --if-present
+
+workflows:
+  version: 2.1
+  # This only runs on master branch
+  MASTER_WORKFLOW:
+    jobs:
+      - build:
+          <<: *on-master-branch
+      - lint:
+          <<: *on-master-branch
+      - e2e-tests:
+          <<: *on-master-branch
+      - unit-tests:
+          <<: *on-master-branch

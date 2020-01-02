@@ -13,11 +13,9 @@ export class AuthService {
 
   private getTokenFromQueryParam = function() {
     const fullUrl = window.location.href;
-    let token = this.router.parseUrl(fullUrl.split('#!')[1]).queryParams.token;
+    const token = this.router.parseUrl(fullUrl.split('#!')[1]).queryParams.token;
 
-    if (!token) {
-      console.info('[auth]: No token found in params.');
-    } else {
+    if (token) {
       this.cookieService.set('token', token);
     }
 
@@ -25,10 +23,8 @@ export class AuthService {
   };
 
   public getToken(): string {
-    const token = this.cookieService.get('token') || this.getTokenFromQueryParam();
-
-    return token;
-  };
+    return this.cookieService.get('token') || this.getTokenFromQueryParam();
+  }
 
   public isLoggedIn(): boolean {
     const token = this.getToken();
@@ -42,11 +38,12 @@ export class AuthService {
   }
 
   public getUser(): any {
+    let user = {};
     if (this.isLoggedIn()) {
-      return this.jwtService.decodeToken(this.getToken());
-    } else {
-      return {}
+      user = this.jwtService.decodeToken(this.getToken());
     }
+
+    return user;
   }
 
   public logout(): any {

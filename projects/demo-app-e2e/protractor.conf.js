@@ -24,5 +24,11 @@ exports.config = {
       project: require('path').join(__dirname, './tsconfig.e2e.json')
     });
     jasmine.getEnv().addReporter(new SpecReporter({ spec: { displayStacktrace: true } }));
+    browser.get('/');
+    browser.manage()
+      .addCookie({
+        name: 'token',
+        value: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MjU3Nzk3MTY0NH0.FuaUxOosBwxLWo2yxd8iA1J2AicXhMNrZrAWes_dgBo`
+      });
   }
 };

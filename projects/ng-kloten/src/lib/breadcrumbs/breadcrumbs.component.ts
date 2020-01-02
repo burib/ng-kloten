@@ -25,8 +25,8 @@ export class BreadcrumbsComponent implements OnInit {
 
         routerList = routerUrl.slice(1).split('/');
 
-        routerList.forEach((router, index) => {
-          target = this.menuItems.find(page => page.href.slice(1) === router);
+        routerList.forEach((route, index) => {
+          target = this.menuItems.find(page => page.href.slice(1) === route);
           target = target || {
               title: routerList[index],
               href: routerList[index]
@@ -35,11 +35,11 @@ export class BreadcrumbsComponent implements OnInit {
           if (target) {
             this.breadcrumbList.push({
               title: target.title,
-              href: (index === 0) ? target.href : `${this.breadcrumbList[index-1].href}/${target.href.slice(1)}`
+              href: (index === 0) ? target.href : `${this.breadcrumbList[index - 1].href}/${target.href.slice(1)}`
             });
           }
 
-          if (index+1 !== routerList.length) {
+          if (index + 1 !== routerList.length) {
             target = target.children;
           }
         });
