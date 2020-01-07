@@ -1,21 +1,13 @@
-<mat-toolbar color="primary">
-  <div fxHide.gt-xs>
-    <!--<button mat-icon-button (click)="onToggleSidenav()">-->
-    <button mat-icon-button>
-      <mat-icon>menu</mat-icon>
-    </button>
-  </div>
-  <div>
-    <a routerLink="/home">Owner-Account</a>
-  </div>
-  <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
+<mat-toolbar color="primary" >
+  <div fxFlex fxLayout fxLayoutAlign="start" fxHide.xs>
     <ul fxLayout fxLayoutGap="15px" class="navigation-items">
-      <li>
-        <a routerLink="/owner">Owner Actions</a>
-      </li>
-      <li>
-        <a routerLink="/account">Account Actions</a>
+      <li *ngFor="let menu of menuItems">
+        <a routerLink="{{menu.link}}">{{menu.title}}</a>
       </li>
     </ul>
+  </div>
+  <div>
+    <a routerLink="/login" href="#" (click)="logout()" *ngIf="!isLoggedIn">Login</a>
+    <a (click)="logout()" *ngIf="isLoggedIn">Logout</a>
   </div>
 </mat-toolbar>

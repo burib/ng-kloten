@@ -19,7 +19,7 @@ import {LayoutModule} from '@angular/cdk/layout';
     BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
-    AuthModule,
+    AuthModule.forRoot({shouldRedirectToSSOPage: false}),
     FooterModule,
     HeaderModule,
     BreadcrumbsModule,

@@ -49,7 +49,7 @@ export class TableComponent implements OnInit {
         searchTerms = JSON.parse(filterValue);
 
         searchTerms.forEach((searchTerm) => {
-          console.log(searchTerm);
+          // console.log(searchTerm);
           // TODO: collect all searchTerms and combine it with the freeTextField search
         });
 

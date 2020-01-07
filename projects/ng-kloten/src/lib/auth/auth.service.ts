@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import { JwtService } from './jwt.service';
 import { CookieService } from './cookie.service';
 import { Router } from '@angular/router';
+import { AuthConfigService, AuthModuleConfigInterface } from './auth-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private jwtService: JwtService,
+  constructor(@Inject(AuthConfigService) private config: AuthModuleConfigInterface,
+              private jwtService: JwtService,
               private cookieService: CookieService,
               private router: Router) {}
 
@@ -49,6 +51,11 @@ export class AuthService {
   public logout(): any {
     this.cookieService.remove('token');
 
-    window.location.href = `/login-with-sso?returnUrl=${window.location.href}`;
+    console.log(this.config.shouldRedirectToSSOPage);
+
+    if (this.config.shouldRedirectToSSOPage) {
+      window.location.href = `/login-with-sso?returnUrl=${window.location.href}`;
+    }
+
   }
 }

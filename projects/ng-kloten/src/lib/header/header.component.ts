@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AuthService } from './../auth/auth.service';
+import { IMenuItem } from './iMenuItem.type';
 
 @Component({
   selector: 'ngkl-header',
@@ -7,12 +8,16 @@ import { AuthService } from './../auth/auth.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  @Input() menuItems: Array<any> = [];
+  @Input() menuItems: Array<IMenuItem> = [];
   // @Output() onToggleSidenav = new EventEmitter<void>();
   constructor(private authService: AuthService) {}
   ngOnInit() {}
 
   logout = () => {
     this.authService.logout();
+  }
+
+  isLoggedIn = () => {
+    this.authService.isLoggedIn();
   }
 }
