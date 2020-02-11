@@ -27,7 +27,7 @@ import { AuthConfigService, AuthModuleConfigInterface, defaultConfig } from './a
 })
 
 export class AuthModule {
-  static forRoot(config: AuthModuleConfigInterface = defaultConfig): ModuleWithProviders {
+  static forRoot(config: AuthModuleConfigInterface = defaultConfig): ModuleWithProviders<AuthModule> {
     return {
       ngModule: AuthModule,
       providers: [

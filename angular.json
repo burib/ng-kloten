@@ -15,7 +15,12 @@
             "tsConfig": "projects/ng-kloten/tsconfig.lib.json",
             "project": "projects/ng-kloten/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/ng-kloten/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -52,6 +57,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/demo-app",
             "index": "projects/demo-app/src/index.html",
             "main": "projects/demo-app/src/main.ts",
@@ -89,6 +95,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
