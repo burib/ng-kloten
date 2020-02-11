@@ -6,10 +6,18 @@
     "startUI": "npx ng serve --proxy-config ./_demo-app-server/proxy.config.json --port 1848 --open",
     "start": "npm run startApi & npm run startUI",
     "ng": "npx ng",
-    "prebuild": "cd ./projects/ng-kloten/ && npm install && npm version prepatch",
+
+    "copy-license": "cp LICENSE dist/ng-kloten",
+    "copy-readme": "cp README.md dist/ng-kloten",
+    "copy-files": "npm run copy-license && npm run copy-readme",
+
+    "build-scss-bundle": "npx scss-bundle -c ./projects/ng-kloten/scss-bundle-config.json",
+
+    "prebuild": "cd ./projects/ng-kloten/ && npm install && npm version prepatch && cd ../..",
     "build": "npx ng build",
-    "postbuild": "npx scss-bundle -c ./projects/ng-kloten/scss-bundle-config.json",
-    "build:prod": "npm run build && cd dist/ng-kloten && npm pack && mv *.tgz ../../releases/ && cd ../../releases/ && ls -lah",
+    "postbuild": "npm run copy-files && npm run build-scss-bundle",
+
+    "publish": "cd ./projects/ng-kloten/ && npm publish",
     "test": "npx ng test --watch=false --browsers=ChromeHeadless --codeCoverage=true",
     "lint": "npx ng lint",
     "e2e": "npx ng e2e"
