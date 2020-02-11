@@ -3,11 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HeaderComponent } from './header.component';
 import { RouterModule } from '@angular/router';
-import {
-  MatToolbarModule,
-  MatIconModule,
-  MatMenuModule,
-} from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import {AuthModule} from '../auth/auth.module';
 
 @NgModule({

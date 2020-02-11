@@ -2,7 +2,9 @@
 
 import { FormControl } from '@angular/forms';
 import { Component, OnInit, ViewChild, Input, Injector } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'ngkl-table',

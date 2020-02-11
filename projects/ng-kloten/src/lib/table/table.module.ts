@@ -4,14 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableComponent } from './table.component';
 
-import {
-  MatTableModule,
-  MatSortModule,
-  MatPaginatorModule,
-  MatInputModule,
-  MatFormFieldModule,
-  MatSelectModule,
-} from '@angular/material';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 
 @NgModule({

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableComponent } from './table.component';
-import { MatTableModule } from '@angular/material';
+import { MatTableModule } from '@angular/material/table';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 
 describe('TableComponent', () => {
