@@ -19,7 +19,7 @@ export class ListComponent implements OnInit {
   titleCasePipe = new TitleCasePipe();
   data: any;
   headers: any[] = [
-    { label: '', id: 'cog' },
+    { label: '', id: 'cog', isNotSearchable: true },
     {
       label: 'Title',
       id: 'title',

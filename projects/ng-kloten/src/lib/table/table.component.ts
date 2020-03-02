@@ -1,28 +1,36 @@
 // app.component.ts
 
-import { FormControl } from '@angular/forms';
-import { Component, OnInit, ViewChild, Input, Injector } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import {FormControl} from '@angular/forms';
+import {Component, OnInit, ViewChild, Input, Injector} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+
+export interface FiltersInterface {
+  label: string;
+  options?: { value: any; viewValue: string }[];
+  formControl: FormControl;
+  filterKey: string;
+}
 
 @Component({
   selector: 'ngkl-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
+
 export class TableComponent implements OnInit {
-  filters = [];
-  filterValues = {};
+  filters: FiltersInterface[];
+  filterValues: { value: string, viewValue: string };
 
   @Input() data: any[] = [];
   @Input() headers: any[] = [];
+  @Input() pageSize = 25;
+  @Input() pageSizeOptions = [10, 25, 50, 100];
+
   dataSource: any;
   displayedColumns: string[];
   getInjector: any;
-
-  pageSize = 10;
-  pageSizeOptions = [10, 25, 50, 100];
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -39,39 +47,56 @@ export class TableComponent implements OnInit {
     };
   }
 
-  createFilter(): (data: any, filterValue: string) => boolean {
-    const filterFunction = function (data, filterValue): boolean {
-      let searchTerms = filterValue;
+  private getDataSource() {
+    return this.dataSource && this.dataSource.filteredData || this.data;
+  }
+
+  createFilter(): (data: any, filterValue: string) => void {
+    const filterFunction = (dataSource, filterValue: string = ''): boolean => {
+      let searchTerms: string | any;
       let isMatching = true;
 
       try {
-        // TODO collect filtering functions and return matching items.
         // TODO able to define custome filtering function per column
         // TODO able to set dateRange Filter
         searchTerms = JSON.parse(filterValue);
 
-        searchTerms.forEach((searchTerm) => {
-          // console.log(searchTerm);
-          // TODO: collect all searchTerms and combine it with the freeTextField search
+        const searchTermValues = Object.entries(searchTerms);
+
+        searchTermValues.forEach((filterObj) => {
+          const key = filterObj[0];
+          const value = filterObj[1].toString();
+
+          isMatching = dataSource[key].toLowerCase().includes(value.toLowerCase());
         });
 
-        isMatching = data.title.toLowerCase().indexOf(searchTerms.title.toLowerCase()) !== -1
-          && data.description.toLowerCase().indexOf(searchTerms.description.toLowerCase()) !== -1;
-
+        return isMatching;
       } catch (err) {
-        isMatching = data.title.toLowerCase().indexOf(searchTerms.toLowerCase()) !== -1
-          || data.description.toLowerCase().indexOf(searchTerms.toLowerCase()) !== -1;
+        searchTerms = filterValue;
+
+        const searchableColumns = this.headers.filter(header => typeof header.isNotSearchable === 'undefined' || !header.isNotSearchable).map(header => header.id);
+        const searchableFields = this.getDataSource().map((dataField) => {
+          if (dataField) {
+            return dataField;
+          }
+        });
+
+        isMatching = searchableFields.map(value => (Object.values(value) || '').toString().toLowerCase()).join(' ').includes(searchTerms);
       }
 
       return isMatching;
     };
+
     return filterFunction;
   }
 
   resetFilters() {
-    this.filters.forEach((filter) => {
+    this.filters.forEach((filter: FiltersInterface) => {
       filter.formControl.reset('');
     });
+
+    this.applyFilter('');
+    this.reRenderFilterSelectOptions(null);
   }
 
   ngOnInit() {
@@ -80,39 +105,13 @@ export class TableComponent implements OnInit {
       [key]: ''
     }), {});
 
-    Object.keys(this.filterValues).forEach((filterableColumnName) => {
-      const options = Array.from(new Set(this.data.map(row => row[filterableColumnName]))).map((value) => {
-        return {value: value, viewValue: value};
-      });
-
-      options.unshift({value: '', viewValue: 'Show All'});
-
-      const filter = {
-        formControl: new FormControl(''),
-        label: this.headers.filter(header => header.id === filterableColumnName)[0].label,
-        options: options,
-        filterKey: filterableColumnName
-      };
-
-      filter.formControl.valueChanges
-        .subscribe(
-          newValue => {
-            this.filterValues[filterableColumnName] = newValue;
-
-            this.dataSource.filter = JSON.stringify(this.filterValues);
-          }
-        );
-
-      this.filters.push(filter);
-    });
-
-
     this.dataSource = new MatTableDataSource(this.data);
     this.displayedColumns = this.headers.map(header => header.id);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    // this.dataSource.filterPredicate = this.createFilter();
+    this.initFilterValues();
+    this.dataSource.filterPredicate = this.createFilter();
   }
 
   applyFilter(filterValue: string) {
@@ -123,5 +122,65 @@ export class TableComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  private getOptionsForFilterSelect(filterableColumnName: string) {
+    const dataSource = this.getDataSource();
+    const options = Array.from(new Set(dataSource.map(row => row[filterableColumnName]))).map((value) => {
+      return {value: <any>value, viewValue: <string>value};
+    }); // show options for the filters
+
+    options.unshift({value: '', viewValue: 'Show All'});
+
+    return options;
+  }
+
+  private reRenderFilterSelectOptions(actualKey): void {
+    this.filters.forEach((filter) => {
+      if (filter.filterKey !== actualKey) {
+        filter.options = this.getOptionsForFilterSelect(filter.filterKey);
+      }
+    });
+  }
+
+  private initFilterValues() {
+    this.filters = [];
+    Object.keys(this.filterValues).forEach((filterableColumnName) => {
+      const filter: FiltersInterface = {
+        formControl: new FormControl(''),
+        options: this.getOptionsForFilterSelect(filterableColumnName),
+        label: this.headers.filter(header => header.id === filterableColumnName)[0].label,
+        filterKey: filterableColumnName
+      };
+
+      // when a filter is selected
+      filter.formControl.valueChanges
+        .subscribe(
+          newValue => {
+            this.filterValues[filterableColumnName] = newValue;
+            const filterObj = {};
+
+
+            Object.entries(this.filterValues).forEach((entries) => {
+              const key: string = entries[0];
+              const searchTerm: string = entries[1];
+
+              if (searchTerm.length > 0) {
+                filterObj[key] = searchTerm;
+
+                this.dataSource.filter = JSON.stringify(filterObj);
+              } else {
+                delete this.filterValues[key];
+
+                this.dataSource.filter = '';
+              }
+            });
+
+            this.reRenderFilterSelectOptions(filterableColumnName);
+          }
+        );
+
+      this.filters.push(filter);
+    });
   }
 }
