@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [TableComponent],
@@ -22,6 +23,7 @@ import { RouterModule } from '@angular/router';
     MatPaginatorModule,
     MatInputModule,
     MatFormFieldModule,
+    MatButtonModule,
     RouterModule,
     MatSelectModule,
     FormsModule,
