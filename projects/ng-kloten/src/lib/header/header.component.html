@@ -1,13 +1,18 @@
 <mat-toolbar color="primary" >
-  <div fxFlex fxLayout fxLayoutAlign="start" fxHide.xs>
+  <span class="logo" *ngIf="logo">{{ logo }}</span>
+  <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
     <ul fxLayout fxLayoutGap="15px" class="navigation-items">
       <li *ngFor="let menu of menuItems">
         <a routerLink="{{menu.link}}">{{menu.title}}</a>
       </li>
+      <ng-container *ngIf="showAuthActions">
+        <li>
+          <a routerLink="/login" href="#" (click)="logout()" *ngIf="!isLoggedIn">Login</a>
+        </li>
+        <li>
+          <a (click)="logout()" *ngIf="isLoggedIn">Logout</a>
+        </li>
+      </ng-container>
     </ul>
-  </div>
-  <div>
-    <a routerLink="/login" href="#" (click)="logout()" *ngIf="!isLoggedIn">Login</a>
-    <a (click)="logout()" *ngIf="isLoggedIn">Logout</a>
   </div>
 </mat-toolbar>

@@ -2,7 +2,7 @@
   "name": "ng-kloten",
   "version": "0.0.0",
   "scripts": {
-    "startApi": "npx json-server --watch ./_demo-app-server/api-responses.json --routes ./_demo-app-server/api-routes.json --middlewares ./_demo-app-server/api-middlewares.js --port 1526",
+    "startApi": "npx json-server --watch ./_demo-app-server/api-responses.json --routes ./_demo-app-server/api-routes.json --middlewares ./_demo-app-server/api-middlewares.js --port 3333",
     "startUI": "npx ng serve --proxy-config ./_demo-app-server/proxy.config.json --port 1848 --open",
     "start": "npm run startApi & npm run startUI",
     "ng": "npx ng",

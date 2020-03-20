@@ -9,6 +9,8 @@ import { IMenuItem } from './iMenuItem.type';
 })
 export class HeaderComponent implements OnInit {
   @Input() menuItems: Array<IMenuItem> = [];
+  @Input() logo?: string;
+  @Input() showAuthActions?: boolean;
   // @Output() onToggleSidenav = new EventEmitter<void>();
   constructor(private authService: AuthService) {}
   ngOnInit() {}
